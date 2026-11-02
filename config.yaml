@@ -30,6 +30,7 @@ image_extensions:
 # 处理选项
 processing:
   save_raw_json: true           # 是否保存每张图片的原始JSON
-  save_per_image_csv: true   # 新增：每张图片单独保存指标CSV
   resume_enabled: true          # 是否启用断点续跑（跳过已处理图片）
   processed_record: "./processed.pkl"  # 断点记录文件路径
+  save_xlsx_report: true        # 新增：开关汇总报告
+  thresholds_path: "thresholds.json"  # 新增：阈值文件路径
