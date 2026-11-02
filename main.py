@@ -1,26 +1,27 @@
 """
-Imatest IT 自动化测试主程序（优化版）
-- 结果集中存放于 output/批次时间戳/ 下
-- 断点续跑、进度条、日志
+Imatest IT 自动化测试主程序（汇总报告版）
+- 分析结果以 JSON 落盘（output/批次时间戳/），报告从磁盘重建全量
+- 断点续跑、进度条、日志保留
 """
 import os
 import sys
 import yaml
+import json
 import traceback
 from datetime import datetime
 from tqdm import tqdm
 
-# 导入自定义模块
 from imatest.it import ImatestLibrary
 from file_utils import (
-    get_image_paths, save_raw_json, save_metrics_csv,
+    get_image_paths, save_raw_json,
     load_processed_set, save_processed_set, make_image_id
 )
 from imatest_api import run_module_on_image
 from metrics_extractor import extract_key_metrics
+from data_loader import rebuild_rows_from_disk      # 新增
+from report import save_report_xlsx, load_thresholds # 新增
 from logger_config import setup_logger
 
-# 初始化日志
 logger = setup_logger()
 
 def load_config(config_path="config.yaml"):
@@ -30,40 +31,35 @@ def load_config(config_path="config.yaml"):
         return yaml.safe_load(f)
 
 def main():
-    # 1. 加载配置
     config = load_config()
     images_base = config["paths"]["images_base"]
-    output_base = config["paths"].get("output_base", "./output")  # 新增
+    output_base = config["paths"].get("output_base", "./output")
     extensions = tuple(config["image_extensions"])
     modules_map = config["modules"]
     processing = config["processing"]
     imatest_cfg = config["imatest"]
 
-    # 创建本次运行的批次标识（时间戳）
     batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_root = os.path.join(output_base, batch_id)
     os.makedirs(output_root, exist_ok=True)
     logger.info(f"输出根目录: {output_root}")
 
-    # 解析 op_mode
     op_mode_str = imatest_cfg["op_mode"]
     op_mode = getattr(ImatestLibrary, op_mode_str, ImatestLibrary.OP_MODE_STANDARD)
 
-    # 2. 初始化 Imatest 引擎
     logger.info("初始化 Imatest 引擎...")
     imatest = ImatestLibrary()
 
-    # 3. 断点续跑记录
     processed_set = set()
     if processing["resume_enabled"]:
         processed_set = load_processed_set(processing["processed_record"])
         logger.info(f"加载断点记录：已处理 {len(processed_set)} 张图片")
 
-    # 4. 遍历所有设备
     if not os.path.isdir(images_base):
         logger.error(f"图片根目录不存在：{images_base}")
         return
 
+    # ---------- 第1步：分析 + JSON落盘（只跑未处理的图） ----------
     for device_name in os.listdir(images_base):
         device_dir = os.path.join(images_base, device_name)
         if not os.path.isdir(device_dir):
@@ -78,8 +74,6 @@ def main():
                 continue
 
             logger.info(f"  模块 {module_folder} 共 {len(img_paths)} 张图片")
-
-            # 构建当前设备/模块的输出子目录（镜像原始结构）
             out_subdir = os.path.join(output_root, device_name, module_folder)
             os.makedirs(out_subdir, exist_ok=True)
 
@@ -91,60 +85,45 @@ def main():
                     logger.debug(f"跳过已处理图片: {img_path}")
                     continue
 
-                row = {
-                    "device": device_name,
-                    "module": module_folder,
-                    "image": img_name,
-                    "error": None
-                }
+                base_name = os.path.splitext(img_name)[0]
 
                 try:
-                    # 调用 Imatest API
                     raw_data = run_module_on_image(
                         imatest, module_key, img_path,
                         imatest_cfg["root_dir"],
                         imatest_cfg["ini_file"],
                         op_mode
                     )
-
                     imatest.close_all_figs()
 
-                    # 保存原始 JSON（可选）
-                    if processing["save_raw_json"]:
-                        base_name = os.path.splitext(img_name)[0]
-                        json_path = os.path.join(out_subdir, f"{base_name}.json")
-                        save_raw_json(raw_data, json_path)
-                        logger.debug(f"JSON 已保存: {json_path}")
-
-                    # 提取关键指标
-                    metrics = extract_key_metrics(module_key, raw_data)
-                    row.update(metrics)
-                    row["error"] = ""
-
-                    # 保存该图片的独立指标 CSV
-                    if processing.get("save_per_image_csv", True):
-                        base_name = os.path.splitext(img_name)[0]
-                        csv_path = os.path.join(out_subdir, f"{base_name}_metrics.csv")
-                        save_metrics_csv([row], csv_path)
-                        logger.debug(f"指标 CSV 已保存: {csv_path}")
-
+                    # 成功：落盘原始 JSON
+                    save_raw_json(raw_data, os.path.join(out_subdir, f"{base_name}.json"))
+                    logger.debug(f"JSON 已保存: {base_name}.json")
 
                 except Exception as e:
+                    # 失败：落盘 error 占位，重建时该行标不合格+原因
                     error_msg = f"{type(e).__name__}: {str(e)}"
                     logger.error(f"处理图片失败 {img_path}: {error_msg}")
                     traceback.print_exc()
-                    row["error"] = error_msg
+                    with open(os.path.join(out_subdir, f"{base_name}.error.json"),
+                              "w", encoding="utf-8") as f:
+                        json.dump({"image": img_name, "error": error_msg}, f,
+                                  ensure_ascii=False)
 
-
-                # 无论成功或失败，记录到已处理集合
                 processed_set.add(img_id)
-
                 if processing["resume_enabled"]:
                     save_processed_set(processing["processed_record"], processed_set)
 
-    # 5. 终止引擎
     imatest.terminate_library()
-    logger.info(f"所有设备测试完成，结果保存在 {output_root}，引擎已终止")
+    logger.info(f"分析完成，本次批次 {output_root}")
+
+    # ---------- 第2步：从磁盘重建全量 → 汇总报告 ----------
+    if processing.get("save_xlsx_report", True):
+        thresholds = load_thresholds(processing["thresholds_path"])
+        rows = rebuild_rows_from_disk(output_base, modules_map)
+        report_path = os.path.join(output_root, f"image_quality_report_{batch_id}.xlsx")
+        save_report_xlsx(rows, report_path, thresholds)
+        logger.info(f"汇总报告已生成: {report_path}（共 {len(rows)} 张图）")
 
 if __name__ == "__main__":
     main()
