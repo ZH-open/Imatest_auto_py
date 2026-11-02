@@ -91,7 +91,7 @@
    
    3）Master中导出 `imatest_base.ini`放入项目中，安装 `imatest-it` whl 包，检查python包是否有imatest-it软件包，选作其为解释器，然后：
 
-   在cmd的python包路径下执行pip install -r requirements.txt
+   在cmd的python包路径下执行 pip install -r requirements.txt
  
 
 4. **放图**：将图卡按 `test_images/[设备名]/[模块]/` 分类放入。
