@@ -83,17 +83,22 @@
 
 ## 🚀 使用流程
 
-1. **准备环境**：安装 Imatest IT + Master GUI（Master 中导出 `imatest_base.ini`），安装 `imatest-it` whl 包，检查python.exe是否有imatest-it软件包，选作其为解释器，然后：
+1. **准备环境**：
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+   1）安装 Imatest IT + Master GUI并License激活
 
-2. **放图**：将图卡按 `test_images/[设备名]/[模块]/` 分类放入。
+   2）系统环境变量中Path加入Imatest IT的bin目录路径、Matlab下的win64目录路径、python安装路径
+   
+   3）Master中导出 `imatest_base.ini`放入项目中，安装 `imatest-it` whl 包，检查python包是否有imatest-it软件包，选作其为解释器，然后：
 
-3. **配置**：在 `config.yaml` 中确认路径与模块映射；按产品规格标定 `thresholds.json`（**仓库内阈值为参考值，验收前必须重新标定**）。
+   在cmd的python包路径下执行pip install -r requirements.txt
+ 
 
-4. **运行**：
+4. **放图**：将图卡按 `test_images/[设备名]/[模块]/` 分类放入。
+
+5. **配置**：在 `config.yaml` 中确认路径与模块映射；按产品规格标定 `thresholds.json`（**仓库内阈值为参考值，验收前必须重新标定**）。
+
+6. **运行**：
 
    ```bash
    python main.py
@@ -101,9 +106,9 @@
 
    终端显示进度条；中断后再次运行自动续跑。
 
-5. **看报告**：批次目录下的 `image_quality_report_[时间戳].xlsx`，一图一行，红=不合格、黄=合格、蓝=中等、绿=良好/优秀。
+7. **看报告**：批次目录下的 `image_quality_report_[时间戳].xlsx`，一图一行，红=不合格、黄=合格、蓝=中等、绿=良好/优秀。
 
-6. **增量测试**：新图放入目录后直接重跑，只分析新图，报告自动包含全部历史图片。
+8. **增量测试**：新图放入目录后直接重跑，只分析新图，报告自动包含全部历史图片。
 
 ## ⚠️ 注意事项
 
@@ -111,3 +116,4 @@
 - `Gamma` 类指标的 `range` 判定目标值 0.45 基于 sRGB 编码链路；若测试 RAW/线性输出，目标值应改为 1.0。
 - MTF50 的 LW/PH 口径随图像分辨率变化，跨设备对比请使用 C/P（Cycles/Pixel）口径。
 - 同一张图重复测试时，以最新批次的结果为准。
+- Master GUI非必需；`imatest_base.ini` 为一次性导出的基准配置（可拷贝复用，手动修改可能报错，最保险用Master导出）
