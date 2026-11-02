@@ -13,6 +13,7 @@
 ### 二、结果落盘 + 全量重建
 
 每张图的分析结果以 JSON 落盘（`output/批次/设备/模块/图名.json`），失败的图保存 `图名.error.json` 占位。报告生成时扫描所有历史批次目录，**同一张图保留最新批次的结果**，增量跑批后输出的永远是全量报告。
+<img width="1421" height="832" alt="image" src="https://github.com/user-attachments/assets/deec47de-d9f6-4bf1-ae93-05dcdc088e33" />
 
 ### 三、五档质量评级与可视化报告
 
@@ -21,6 +22,11 @@
 - `lower_better`：越小越好（如 ΔE、畸变、过冲）
 - `higher_better`：越大越好（如 MTF50、SNR、动态范围）
 - `range`：越接近目标值越好（如 Gamma，按与 target 的偏差判定）
+<img width="1834" height="805" alt="image" src="https://github.com/user-attachments/assets/6daeba48-f6dd-4076-b9e4-0d90d9e4e26f" />
+
+<img width="1863" height="817" alt="image" src="https://github.com/user-attachments/assets/8f1d5cf2-cb8d-4330-ae5e-364523fefbab" />
+
+<img width="1863" height="817" alt="image" src="https://github.com/user-attachments/assets/d571a663-3607-480e-91c5-cc7273aea860" />
 
 报告为单个 xlsx：**一图一行横向排列**，每个指标单元格按等级着色，含综合评级（取最差一档）与错误信息列，支持冻结表头横向对比。
 
@@ -35,6 +41,14 @@
 ### 六、非交互式运行
 
 全程后台模式，不弹分析窗口，内存占用低，适合大批量图片测试。
+
+控制台显示进度条
+<img width="999" height="654" alt="image" src="https://github.com/user-attachments/assets/790019ea-0926-4af3-a9db-fece58831239" />
+
+<img width="999" height="649" alt="image" src="https://github.com/user-attachments/assets/29868fb3-c545-49a2-ba14-0e555840982c" />
+
+<img width="1000" height="690" alt="image" src="https://github.com/user-attachments/assets/4ef18e06-22b2-4d1c-8545-8216b209a92a" />
+
 
 ## 📁 项目目录结构
 
@@ -69,7 +83,7 @@
 
 ## 🚀 使用流程
 
-1. **准备环境**：安装 Imatest IT + Master GUI（Master 中导出 `imatest_base.ini`），安装 `imatest-it` whl 包，然后：
+1. **准备环境**：安装 Imatest IT + Master GUI（Master 中导出 `imatest_base.ini`），安装 `imatest-it` whl 包，检查python.exe是否有imatest-it软件包，选作其为解释器，然后：
 
    ```bash
    pip install -r requirements.txt
