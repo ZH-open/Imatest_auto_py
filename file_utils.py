@@ -20,20 +20,6 @@ def save_raw_json(data: dict, save_path: str):
     with open(save_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
-def save_metrics_csv(rows: List[Dict], csv_path: str):
-    """保存指标列表到CSV文件"""
-    if not rows:
-        return
-    # 收集所有列名
-    fieldnames = set()
-    for r in rows:
-        fieldnames.update(r.keys())
-    fieldnames = sorted(fieldnames)
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
-
 def load_processed_set(record_file: str) -> Set[str]:
     """加载已处理的图片标识集合（用于断点续跑）"""
     if os.path.exists(record_file):
