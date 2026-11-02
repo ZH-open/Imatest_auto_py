@@ -1,0 +1,38 @@
+{
+  "sfrplus_QL_worst":               {"direction": "lower_better",  "unit": "JND",     "excellent": 3,    "good": 5,    "medium": 8,    "pass": 12},
+  "sfrplus_MTF50_center":           {"direction": "higher_better", "unit": "C/P",     "excellent": 0.30, "good": 0.25, "medium": 0.20, "pass": 0.15},
+  "sfrplus_MTF50_worst_corner":     {"direction": "higher_better", "unit": "C/P",     "excellent": 0.20, "good": 0.15, "medium": 0.12, "pass": 0.08},
+  "sfrplus_MTF50_minmax_ratio":     {"direction": "higher_better", "unit": "比值",     "excellent": 0.70, "good": 0.60, "medium": 0.50, "pass": 0.40},
+  "sfrplus_overshoot_pct":          {"direction": "lower_better",  "unit": "%",       "excellent": 3,    "good": 5,    "medium": 8,    "pass": 12},
+  "sfrplus_undershoot_pct":         {"direction": "lower_better",  "unit": "%",       "excellent": 1,    "good": 2,    "medium": 4,    "pass": 8},
+  "sfrplus_distortion_SMIA_pct":    {"direction": "lower_better",  "unit": "%",       "excellent": 0.5,  "good": 1.0,  "medium": 2.0,  "pass": 3.0},
+  "sfrplus_worst_geo_distortion_pct": {"direction": "lower_better", "unit": "%",       "excellent": 0.3,  "good": 0.5,  "medium": 0.8,  "pass": 1.0},
+  "sfrplus_gamma":                  {"direction": "range", "target": 0.45, "unit": "无量纲", "severity": "major", "excellent": 0.02, "good": 0.04, "medium": 0.08, "pass": 0.15},
+  "sfrplus_exposure_error_fstops":  {"direction": "lower_better",  "unit": "f-stops", "excellent": 0.1,  "good": 0.25, "medium": 0.5,  "pass": 1.0},
+  "sfrplus_snr_pixel_ratio_mean":   {"direction": "higher_better", "unit": "倍",       "excellent": 8,    "good": 5,    "medium": 3,    "pass": 2},
+  "sfrplus_lca_max_pixels":         {"direction": "lower_better",  "unit": "px",      "excellent": 1,    "good": 2,    "medium": 4,    "pass": 6},
+
+  "distortion_SMIA_pct":            {"direction": "lower_better",  "unit": "%",       "excellent": 0.5,  "good": 1.0,  "medium": 2.0,  "pass": 3.0},
+  "distortion_max_geo_pct":         {"direction": "lower_better",  "unit": "%",       "excellent": 0.3,  "good": 0.5,  "medium": 0.8,  "pass": 1.0},
+  "distortion_ISO_pct":             {"direction": "lower_better",  "unit": "%",       "excellent": 0.3,  "good": 0.5,  "medium": 0.8,  "pass": 1.0},
+
+  "avg_deltaE_00":                  {"direction": "lower_better",  "unit": "ΔE00",    "excellent": 5,    "good": 8,    "medium": 12,   "pass": 15},
+  "max_deltaE_00":                  {"direction": "lower_better",  "unit": "ΔE00",    "excellent": 10,   "good": 15,   "medium": 20,   "pass": 25},
+  "white_balance_error_mireds":     {"direction": "lower_better",  "unit": "Mired",   "excellent": 2,    "good": 5,    "medium": 10,   "pass": 20},
+  "camera_saturation_pct":          {"direction": "range", "target": 100, "unit": "%", "severity": "minor", "excellent": 3, "good": 6, "medium": 10, "pass": 15},
+  "snr_y_dB":                       {"direction": "higher_better", "unit": "dB",      "excellent": 42,   "good": 38,   "medium": 34,   "pass": 30},
+  "gamma_stepchart":                {"direction": "range", "target": 0.45, "unit": "无量纲", "severity": "major", "excellent": 0.02, "good": 0.04, "medium": 0.08, "pass": 0.15},
+  "cpiq_chroma_ql":                 {"direction": "lower_better",  "unit": "JND",     "excellent": 1,    "good": 2,    "medium": 3,    "pass": 5},
+  "dr_from_slope_EV":               {"direction": "higher_better", "unit": "EV",      "excellent": 10,   "good": 8,    "medium": 6,    "pass": 4.5},
+
+  "texture_QL":                     {"direction": "lower_better",  "unit": "JND",     "excellent": 3,    "good": 6,    "medium": 10,   "pass": 15},
+  "mtf50_LWPH_mean":                {"direction": "higher_better", "unit": "LW/PH",   "excellent": 2000, "good": 1600, "medium": 1200, "pass": 800},
+  "texture_MTF50_CP_mean":          {"direction": "higher_better", "unit": "C/P",     "excellent": 0.28, "good": 0.24, "medium": 0.20, "pass": 0.15},
+  "texture_acutance":               {"direction": "higher_better", "unit": "0~1",     "excellent": 0.85, "good": 0.75, "medium": 0.65, "pass": 0.55},
+  "texture_clipping_pct":           {"direction": "lower_better",  "unit": "%",       "excellent": 0.5,  "good": 1.0,  "medium": 2.0,  "pass": 5.0},
+
+  "luminance_uniformity_pct":       {"direction": "higher_better", "unit": "%",       "excellent": 95,   "good": 90,   "medium": 85,   "pass": 80},
+  "nonuniformity_pct":              {"direction": "lower_better",  "unit": "%",       "excellent": 5,    "good": 10,   "medium": 15,   "pass": 20},
+  "color_uniformity_max_deltaE":    {"direction": "lower_better",  "unit": "ΔE00",    "excellent": 3,    "good": 5,    "medium": 8,    "pass": 12},
+  "blemish_count":                  {"direction": "lower_better",  "unit": "个",       "excellent": 0,    "good": 0,    "medium": 2,    "pass": 5}
+}
