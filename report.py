@@ -71,9 +71,21 @@ def rate_five_level(value, rule):
             return name
     return "不合格"
 
-def worst_level(levels):
-    valid = [l for l in levels if l in LEVEL_ORDER and l != "N/A"]
-    return min(valid, key=lambda x: LEVEL_ORDER.index(x)) if valid else "N/A"
+def overall_rating(levels_sev):
+    """levels_sev: [(等级, severity), ...]
+    blocker 不合格 → 一票否决；major 不合格 → 折算中等；minor 不合格 → 折算合格
+    """
+    worst = "优秀"
+    for lv, sev in levels_sev:
+        if lv == "N/A":
+            continue
+        if lv == "不合格" and sev == "blocker":
+            return "不合格"
+        if lv == "不合格":
+            lv = "合格" if sev == "minor" else "中等"   # minor→合格；major或漏配→中等
+        if LEVEL_ORDER.index(lv) < LEVEL_ORDER.index(worst):
+            worst = lv
+    return worst
 
 def save_report_xlsx(all_rows, out_path, thresholds):
     """一个xlsx一个sheet：一图一行，每格按指标等级着色"""
@@ -115,8 +127,8 @@ def save_report_xlsx(all_rows, out_path, thresholds):
             if rule and v != "" and v is not None:
                 lv = rate_five_level(v, rule)
                 lv_map[k] = lv
-                levels.append(lv)
-        rec["综合评级"] = "不合格" if row.get("error") else worst_level(levels)
+                levels.append((lv, rule.get("severity", "major")))
+        rec["综合评级"] = "不合格" if row.get("error") else overall_rating(levels)
         records.append(rec)
         cell_levels.append(lv_map)
 
