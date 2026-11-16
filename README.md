@@ -26,13 +26,14 @@
 
 <img width="1863" height="817" alt="image" src="https://github.com/user-attachments/assets/8f1d5cf2-cb8d-4330-ae5e-364523fefbab" />
 
-<img width="1863" height="817" alt="image" src="https://github.com/user-attachments/assets/d571a663-3607-480e-91c5-cc7273aea860" />
+<img width="1863" height="817" alt="image" src="https://github.com/user-attachments/assets/9db158d8-65a7-4838-b1b0-70132493e545" />
 
-报告为单个 xlsx：**一图一行横向排列**，每个指标单元格按等级着色，含综合评级（取最差一档）与错误信息列，支持冻结表头横向对比。
+
+报告为单个 xlsx：**一图一行横向排列**，每个指标单元格按等级着色，含综合评级（根据阈值严重级别）与错误信息列，支持冻结表头横向对比。
 
 ### 四、指标分级否决（severity）
 
-阈值可标记指标严重级别：`blocker`（一票否决）、`major`（不合格最多拉低到中等）、`minor`（仅作参考降级），避免非关键指标误杀整批结论。
+阈值可标记指标严重级别：`blocker`（一票否决）、`major`（不合格最多拉低到中等）、`minor`（仅作参考降级），避免非关键指标误杀整批结论，无级别默认major。
 
 ### 五、配置文件驱动
 
